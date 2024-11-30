@@ -1,43 +1,38 @@
 import os
 import logging
 from telegram import Update
-from telegram.ext import Updater, CommandHandler, CallbackContext
+from telegram.ext import Application, CommandHandler, CallbackContext
 
-# Get the Telegram bot token from GitHub Secrets
-TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')  # Access the secret from GitHub Secrets
-
-if TELEGRAM_BOT_TOKEN is None:
-    print("Error: TELEGRAM_BOT_TOKEN is not set.")
-    exit(1)
-
-# Set up logging to see any errors
+# Enable logging to see if there are any errors
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    level=logging.INFO)
+                    level=logging.DEBUG)  # Set logging level to DEBUG to see detailed logs
 logger = logging.getLogger(__name__)
 
+# Get the Telegram bot token from environment variable (e.g., GitHub secrets)
+TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')  # Get the token from GitHub secrets
+
+if TELEGRAM_BOT_TOKEN is None:
+    logger.error("Error: TELEGRAM_BOT_TOKEN is not set.")
+    exit(1)
+
 # Define the /start command handler
-def start(update: Update, context: CallbackContext) -> None:
+async def start(update: Update, context: CallbackContext) -> None:
+    logger.info(f"Received /start command from user: {update.effective_user.first_name}")
     user = update.effective_user  # Get the user who triggered the /start command
     chat_id = update.message.chat_id  # Get the chat ID automatically from the update object
 
     # Send a welcome message to the user who triggered the /start command
-    update.message.reply_text(f"Hello, {user.first_name}! Welcome to the bot.")
+    await update.message.reply_text(f"Hello, {user.first_name}! Welcome to the bot.")
 
 def main():
-    # Create the Updater and pass the bot's token
-    updater = Updater(TELEGRAM_BOT_TOKEN)
-
-    # Get the dispatcher to register handlers
-    dispatcher = updater.dispatcher
+    # Create the Application and pass the bot's token
+    application = Application.builder().token(TELEGRAM_BOT_TOKEN).build()
 
     # Register the /start command handler
-    dispatcher.add_handler(CommandHandler("start", start))
+    application.add_handler(CommandHandler("start", start))
 
-    # Start the bot
-    updater.start_polling()
-
-    # Run the bot until you send a signal to stop it (Ctrl+C)
-    updater.idle()
+    # Start the bot (async)
+    application.run_polling()
 
 if __name__ == '__main__':
     main()
