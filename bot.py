@@ -2,7 +2,7 @@ import os
 import logging
 from telegram import Update
 from telegram.ext import Application, CommandHandler, CallbackContext
-
+#some changes
 # Enable logging to see if there are any errors
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.DEBUG)  # Set logging level to DEBUG to see detailed logs
