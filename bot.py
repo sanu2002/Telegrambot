@@ -17,8 +17,10 @@ logger = logging.getLogger(__name__)
 
 # Define the /start command handler
 def start(update: Update, context: CallbackContext) -> None:
-    user = update.effective_user
-    # Send a welcome message when the /start command is issued
+    user = update.effective_user  # Get the user who triggered the /start command
+    chat_id = update.message.chat_id  # Get the chat ID automatically from the update object
+
+    # Send a welcome message to the user who triggered the /start command
     update.message.reply_text(f"Hello, {user.first_name}! Welcome to the bot.")
 
 def main():
