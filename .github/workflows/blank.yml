@@ -21,6 +21,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip  # Upgrade pip
+          pip install six
           pip install requests python-telegram-bot  # Install both requests and python-telegram-bot
 
       - name: Run the bot script
