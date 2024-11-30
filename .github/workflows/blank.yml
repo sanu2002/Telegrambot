@@ -1,27 +1,32 @@
-name: Telegram Bot with OpenAI Integration
+name: Send Message to Telegram Bot
 
+# Trigger the workflow when you push to the main branch
 on:
   push:
     branches:
-      - main
+      - main  # Trigger on push to the main branch
 
 jobs:
   send_message:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Run on the latest Ubuntu environment
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2  # Checkout the repository code
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v2  # Set up Python environment
         with:
-          python-version: '3.8'
+          python-version: '3.8'  # Use Python 3.8
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install openai requests
+          python -m pip install --upgrade pip  # Upgrade pip
+          pip install requests  # Install the 'requests' library for API interaction
 
       - name: Run the bot script
-        run: python bot.py
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}  # Securely use the secret bot token
+          CHAT_ID: ${{ secrets.CHAT_ID }}  # Securely use the secret chat ID
+        run: |
+          python bot.py  # Run the bot script
